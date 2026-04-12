@@ -1,0 +1,72 @@
+# ============================================================
+# job-scout 監視条件設定ファイル
+# ============================================================
+# このファイルを編集して監視条件をカスタマイズしてください。
+
+filters:
+  # 含むキーワード（title または description に1つでも含まれれば対象）
+  keywords:
+    - software engineer
+    - backend
+    - backend engineer
+    - AI engineer
+    - machine learning
+    - internship
+    - intern
+    - python developer
+    - data engineer
+    - MLOps
+
+  # 勤務地（"Remote" を含む場合は遠隔勤務もマッチ）
+  locations:
+    - Tokyo
+    - Remote
+    - Japan
+    - Osaka
+
+  # 雇用形態（空リストにすると全雇用形態を対象にする）
+  job_types:
+    - intern
+    - new grad
+    - part-time
+    - full-time
+    - contract
+
+  # 除外キーワード（title または description に含まれると対象外）
+  exclude_keywords:
+    - senior
+    - lead
+    - manager
+    - director
+    - VP
+    - principal
+    - 10+ years
+    - 8+ years
+
+  # キーワードマッチ時の最小スコア（1以上で通知）
+  min_score: 1
+
+# 収集設定
+collection:
+  # 1リクエストあたりの待機秒数
+  request_delay_seconds: 2
+  # リクエストタイムアウト（秒）
+  request_timeout_seconds: 15
+  # User-Agent
+  user_agent: "job-scout-bot/1.0 (github.com/taku629/job-scout; personal use)"
+  # 1ソースあたりの最大取得件数
+  max_jobs_per_source: 50
+
+# 通知設定
+notification:
+  # 1回のメッセージに含める最大件数
+  max_jobs_per_message: 5
+  # 通知言語
+  language: "ja"
+
+# 要約設定
+summarizer:
+  # 要約のプロンプト言語
+  prompt_language: "ja"
+  # 要約の最大文字数
+  max_summary_length: 300

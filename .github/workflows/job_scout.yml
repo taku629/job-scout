@@ -1,0 +1,93 @@
+name: job-scout
+
+on:
+  # 定期実行: 毎日9:00 JST (= 0:00 UTC)
+  schedule:
+    - cron: "0 0 * * *"
+
+  # 手動実行
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run（通知を送らず結果を確認する）"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
+      source:
+        description: "特定ソースのみ実行（空白で全ソース）"
+        required: false
+        default: ""
+      no_summary:
+        description: "AI要約をスキップする"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # data/ ディレクトリを Actions の artifact としてキャッシュ
+      # → 実行をまたいで seen_ids.json を維持する
+      - name: Restore data cache
+        uses: actions/cache@v4
+        with:
+          path: data/
+          key: job-scout-data-${{ runner.os }}
+          restore-keys: |
+            job-scout-data-
+
+      - name: Run job-scout
+        env:
+          # 通知チャンネル（Secrets で設定）
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # AI要約（Secrets で設定）
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # 実行設定
+          LOG_LEVEL: INFO
+          ENABLE_SUMMARIZER: "true"
+          ENABLE_NOTIFICATIONS: "true"
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ -n "${{ github.event.inputs.source }}" ]; then
+            ARGS="$ARGS --source '${{ github.event.inputs.source }}'"
+          fi
+          if [ "${{ github.event.inputs.no_summary }}" = "true" ]; then
+            ARGS="$ARGS --no-summary"
+          fi
+          python run.py $ARGS
+
+      # ログをアーティファクトとして保存（デバッグ用）
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: job-scout-logs-${{ github.run_id }}
+          path: data/logs/
+          retention-days: 7

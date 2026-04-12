@@ -1,0 +1,74 @@
+# ============================================================
+# 収集ソース設定ファイル
+# ============================================================
+# type: rss   → RSS/Atom フィードとして収集
+# type: html  → HTMLページをスクレイピングして収集
+#
+# robots.txt・利用規約を確認済みのソースのみ掲載しています。
+# 新しいソースを追加する前に必ず利用規約を確認してください。
+# ============================================================
+
+sources:
+  # ----------------------------------------------------------
+  # RSS フィード（feedparser で処理）
+  # ----------------------------------------------------------
+  - name: "RemoteOK"
+    type: rss
+    url: "https://remoteok.com/remote-jobs.rss"
+    enabled: true
+    tags: ["remote", "english"]
+    notes: "RemoteOK public RSS feed. https://remoteok.com/robots.txt 確認済み"
+
+  - name: "We Work Remotely - Programming"
+    type: rss
+    url: "https://weworkremotely.com/categories/remote-programming-jobs.rss"
+    enabled: true
+    tags: ["remote", "english"]
+    notes: "We Work Remotely public RSS feed"
+
+  - name: "We Work Remotely - Full Stack"
+    type: rss
+    url: "https://weworkremotely.com/categories/remote-full-stack-programming-jobs.rss"
+    enabled: true
+    tags: ["remote", "english"]
+
+  - name: "Python.org Jobs"
+    type: rss
+    url: "https://www.python.org/jobs/feed/rss/"
+    enabled: true
+    tags: ["python", "english"]
+    notes: "Python.org official jobs board RSS"
+
+  - name: "GitHub Explore - Jobs (Hacker News)"
+    type: rss
+    url: "https://hnrss.org/whoishiring"
+    enabled: true
+    tags: ["hn", "english"]
+    notes: "Hacker News Who is Hiring monthly thread via hnrss.org"
+
+  # ----------------------------------------------------------
+  # HTML スクレイピング（BeautifulSoup で処理）
+  # robots.txt で許可されているページのみ
+  # ----------------------------------------------------------
+  - name: "TokyoDev"
+    type: html
+    url: "https://www.tokyodev.com/jobs"
+    enabled: true
+    tags: ["japan", "tokyo", "english"]
+    parser:
+      job_selector: "article.job"           # 求人カードのCSSセレクタ
+      title_selector: "h2.job-title"        # タイトル
+      company_selector: ".company-name"     # 会社名
+      location_selector: ".job-location"    # 勤務地
+      link_selector: "a.job-link"           # 詳細リンク
+      description_selector: ".job-excerpt"  # 概要文
+    notes: "TokyoDev - English jobs in Japan. robots.txt 確認済み"
+
+  # ----------------------------------------------------------
+  # 追加方法（例）
+  # ----------------------------------------------------------
+  # - name: "My Custom Feed"
+  #   type: rss
+  #   url: "https://example.com/jobs.rss"
+  #   enabled: false
+  #   tags: ["custom"]
