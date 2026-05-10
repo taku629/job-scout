@@ -41,13 +41,42 @@ cp .env.example .env
 
 | 変数名 | 必須 | 説明 |
 |--------|------|------|
-| `DISCORD_WEBHOOK_URL` | ◎ | Discord の Webhook URL |
+| `SMTP_USER` | ◎ | 送信元メールアドレス |
+| `SMTP_PASSWORD` | ◎ | Gmailアプリパスワード（後述） |
+| `NOTIFY_TO` | ◎ | 送信先メールアドレス |
+| `SMTP_HOST` | - | デフォルト: `smtp.gmail.com` |
+| `SMTP_PORT` | - | デフォルト: `587` |
 | `ANTHROPIC_API_KEY` | △ | AI要約を使う場合 |
+| `DISCORD_WEBHOOK_URL` | - | Discord 通知（オプション） |
 | `TELEGRAM_BOT_TOKEN` | - | Telegram 通知（オプション） |
 | `TELEGRAM_CHAT_ID` | - | Telegram 通知（オプション） |
 | `SLACK_WEBHOOK_URL` | - | Slack 通知（オプション） |
 
-#### Discord Webhook の取得手順
+> 複数の通知先を設定すると全チャンネルに同時送信されます。
+
+#### Gmailアプリパスワードの取得手順
+
+通常のGoogleアカウントパスワードではSMTP送信できません。以下の手順でアプリパスワードを発行してください。
+
+1. **2段階認証を有効にする**
+   - https://myaccount.google.com/security を開く
+   - 「2段階認証プロセス」をオンにする
+
+2. **アプリパスワードを発行する**
+   - https://myaccount.google.com/apppasswords を開く
+   - アプリ名（例: `job-scout`）を入力して「作成」
+   - 表示された **16文字のパスワード** をコピー
+
+3. **`.env` に設定する**
+   ```
+   SMTP_USER=your-gmail@gmail.com
+   SMTP_PASSWORD=xxxx xxxx xxxx xxxx   # スペースを除いた16文字
+   NOTIFY_TO=送信先@example.com
+   ```
+
+> **注意**: `SMTP_PASSWORD` には通常のGoogleログインパスワードではなく、アプリパスワードを使用してください。
+
+#### Discord Webhook の取得手順（オプション）
 1. Discord サーバー → チャンネル設定 → 連携サービス → ウェブフックを作成
 2. Webhook URL をコピーして `DISCORD_WEBHOOK_URL` に設定
 

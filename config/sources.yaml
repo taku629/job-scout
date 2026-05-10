@@ -65,6 +65,37 @@ sources:
     notes: "TokyoDev - English jobs in Japan. robots.txt 確認済み"
 
   # ----------------------------------------------------------
+  # 日本向け RSS フィード
+  # ----------------------------------------------------------
+  - name: "Qiita Jobs (エンジニア転職)"
+    type: rss
+    url: "https://jobs.qiita.com/feed"
+    enabled: true
+    tags: ["japan", "engineer", "japanese"]
+    notes: "Qiita Jobs公式RSSフィード。エンジニア向け求人"
+
+  - name: "LAPRAS Job Board"
+    type: rss
+    url: "https://lapras.com/jobs/rss"
+    enabled: true
+    tags: ["japan", "engineer", "japanese"]
+    notes: "LAPRAS エンジニア向けスカウト求人RSS"
+
+  - name: "GitHub Jobs Japan (hnrss経由)"
+    type: rss
+    url: "https://hnrss.org/whoishiring?q=Japan"
+    enabled: true
+    tags: ["japan", "hn", "english"]
+    notes: "HN Who is Hiring スレッドのJapan絞り込み"
+
+  - name: "Dev.to Jobs"
+    type: rss
+    url: "https://dev.to/feed/tag/jobs"
+    enabled: true
+    tags: ["remote", "english", "global"]
+    notes: "Dev.to jobs タグフィード。リモート可多数"
+
+  # ----------------------------------------------------------
   # 追加方法（例）
   # ----------------------------------------------------------
   # - name: "My Custom Feed"
@@ -72,3 +103,6 @@ sources:
   #   url: "https://example.com/jobs.rss"
   #   enabled: false
   #   tags: ["custom"]
+  #
+  # ※ Wantedly・Greenは公式RSSを公開していないため
+  #   公式APIまたは手動チェックを推奨します
